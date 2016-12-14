@@ -5,11 +5,10 @@ using System.Web;
 
 namespace ListDirections.Models
 {
-    public class History
+    public class AccessRights
     {
-        public int SessionID { get; set;}
         public int ProcessID { get; set; }
-        public int EventID { get; set; }
-        public DateTime Time { get; set; }
+        public string UserName { get; set; }
+        public bool ReadOnly { get; set; }
     }
 }
