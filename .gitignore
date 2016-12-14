@@ -129,7 +129,7 @@ publish/
 #*.pubxml
 
 # NuGet Packages Directory
-packages/*
+#packages/*
 ## TODO: If the tool you use requires repositories.config
 ## uncomment the next line
 #!packages/repositories.config
@@ -138,7 +138,7 @@ packages/*
 # NuGet packages use it for MSBuild targets.
 # This line needs to be after the ignore of the build folder
 # (and the packages folder if the line above has been uncommented)
-!packages/build/
+#!packages/build/
 
 # Windows Azure Build Output
 csx/
@@ -191,20 +191,12 @@ ModelManifest.xml
 # Custom
 obj
 bin
-lib
 prerequisites
 builds
 *.opensdf
-RegisterSnapIn_x64.cmd
 
 .vs/
 SmartScan.VC.opendb
-
-# Generated JavaScript files from TypeScript sources
-src/Evry.SmartSCAN.WebClient/app/*.js
-src/Evry.SmartSCAN.WebClient/app/*.js.map
-src/Evry.SmartSCAN.WebClient/app/features/**/*.js
-src/Evry.SmartSCAN.WebClient/app/features/**/*.js.map
 
 #ignore thumbnails created by windows
 Thumbs.db
@@ -226,12 +218,12 @@ Thumbs.db
 *.cache
 *.ilk
 *.log
-*.dll
-*.lib
+#*.dll
+#*.lib
 *.sbr
 obj
 bin
-lib
+#lib
 prerequisites
 builds
 docs
@@ -240,6 +232,4 @@ docs
 *.js.map
 *.css.map
 *.lnk
-/SmartScan.VC.VC.opendb
-/SmartScan.VC.db
 *Log_*.xml
