@@ -11,6 +11,7 @@ namespace ListDirections.Models
         public int ProcessID { get; set;}
         public int DayOfWeek { get; set; }
         public int DayOfMonth { get; set; }
-        public DateTime TimeToRun { get; set; }
+        public int  Hour { get; set; }
+        public int Minute { get; set; }
     }
 }

@@ -133,10 +133,12 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccessRights.cs" />
+    <Compile Include="Models\ContextProcess.cs" />
     <Compile Include="Models\History.cs" />
     <Compile Include="Models\MainProcess.cs" />
     <Compile Include="Models\PreRequisite.cs" />
     <Compile Include="Models\Shedule.cs" />
+    <Compile Include="Models\Visitor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
