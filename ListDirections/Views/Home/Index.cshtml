@@ -1,47 +1,42 @@
-﻿@using ListDirections.Models
-@model MainProcess[]
-
-<head>
-    <meta http-equiv="content-type" content="text/html; charset=utf8" />
-    <style type = "text/css">
-        TABLE{
-            border-collapse:collapse;
+﻿@section PageStyle 
+{
+    <style>
+        TABLE {
+            border-collapse: collapse;
         }
-        TD, TH{
+        TD, TH {
             padding: 3px;
             border: 1px solid black;
         }
     </style>
-</head>
+}
 
-<body>
-<div>
-    <h3> LIST OF PROCESES </h3>
+@using ListDirections.Models
+@model MainProcess[]
+
+<h3> LIST OF PROCESES </h3>
         
-    <table>
+<table>
+    <tr>
+        <td> <p> Name of  </p></td>
+        <td><p> Work with process</p></td>
+        <td><p> Status of process</p></td>
+    </tr>
+
+    @foreach (MainProcess p in Model)
+    {
         <tr>
-            <td> <p> Name of  </p></td>
-            <td><p> Work with process</p></td>
-            <td><p> Status of process</p></td>
-        </tr>
-
-
-        @foreach (MainProcess p in Model)
-        {
-            <tr>
-                <td>
-                    @p.Name
-                </td>
-                <td>
-                    <p>
-                     <input type="button" name="execute_@p.ID" value=" start">
-                     <input type="button" name="edir_@p.ID" value="continue">
-                    </p>
-                </td>
+            <td>
+                @p.Name
+            </td>
+            <td>
+                <p>
+                    <input type="button" name="execute_@p.ID" value=" start">
+                    <input type="button" name="edir_@p.ID" value="continue">
+                </p>
+            </td>
                        
-            </tr>
-        }
-    </table>
+        </tr>
+    }
+</table>
    
-</div>
-</body>
