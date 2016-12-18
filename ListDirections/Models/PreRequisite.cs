@@ -15,6 +15,8 @@ namespace ListDirections.Models
         
         [MaxLength(50)]
         public string Name { get; set; }
+
+        public int StepOrder { get; set; }
         
         public bool Check() { return true; }
     }

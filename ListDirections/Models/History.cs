@@ -26,7 +26,19 @@ namespace ListDirections.Models
         public bool? Success { get; set; }
         
         public string ErrorMessage { get; set; }
+
+        private PreRequisite _preRequisite = null;
+        public PreRequisite PreRequisite
+        {
+            get
+            {
+                if (EventID > 0)
+                {
+                    if (_preRequisite == null) _preRequisite = ContextProcess.Object.PreRequisites.Find(EventID);
+                    return _preRequisite;
+                }
+                return null;
+            }
+        }
     }
-
-
 }

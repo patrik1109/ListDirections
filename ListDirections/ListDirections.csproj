@@ -136,6 +136,10 @@
     <Compile Include="Migrations\201612181352388_InitDbMigration.Designer.cs">
       <DependentUpon>201612181352388_InitDbMigration.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201612181627070_StepOrderMigration.cs" />
+    <Compile Include="Migrations\201612181627070_StepOrderMigration.Designer.cs">
+      <DependentUpon>201612181627070_StepOrderMigration.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccessRights.cs" />
     <Compile Include="Models\ContextProcess.cs" />
@@ -194,6 +198,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201612181352388_InitDbMigration.resx">
       <DependentUpon>201612181352388_InitDbMigration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612181627070_StepOrderMigration.resx">
+      <DependentUpon>201612181627070_StepOrderMigration.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

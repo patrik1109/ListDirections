@@ -9,17 +9,10 @@ namespace ListDirections.Controllers
 {
     public class HomeController : Controller
     {
-        ContextProcess db = new ContextProcess();
         public ActionResult Index()
         {
             ViewBag.Title = "Process List";
-            return View(db.MainProceses.ToArray());
-        }
-        public Shedule[] Process_Shedule (int ID)
-        {
-            Shedule[] result = db.Sheduls.Where(s => s.ProcessID == ID).ToArray();
-            return result;
-        }
-       
+            return View(ContextProcess.Object.MainProceses.ToArray());
+        }       
     }
 }

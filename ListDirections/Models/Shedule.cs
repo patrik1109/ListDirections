@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ListDirections.Models
 {
-    public class Shedule
+    public class Schedule
     {
         public int ID { get; set; }
 

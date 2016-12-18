@@ -16,8 +16,7 @@ namespace ListDirections.Models
         {
             get
             {
-                ContextProcess db = new ContextProcess();
-                AccessRights[] result = db.Acceses.Where(s => s.UserName  == Login && s.ReadOnly == true).ToArray();
+                AccessRights[] result = ContextProcess.Object.Acceses.Where(s => s.UserName == Login && s.ReadOnly == true).ToArray();
                 return result;
             }
         }
