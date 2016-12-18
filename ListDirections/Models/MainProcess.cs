@@ -48,6 +48,9 @@ namespace ListDirections.Models
             }
         }
 
+        /// <summary>
+        /// Последняя плановая дата запуска процесса 
+        /// </summary>
         public DateTime PlanDate
         {
             get
@@ -75,6 +78,9 @@ namespace ListDirections.Models
         }
 
         private History[] _current_state = null;
+        /// <summary>
+        /// Подробности текущего запуска процесса
+        /// </summary>
         public History[] Current_State
         {
             get
@@ -84,6 +90,9 @@ namespace ListDirections.Models
             }
         }
         
+        /// <summary>
+        /// Текущее состояние (название)
+        /// </summary>
         public ProcState CurrentStateName
         {
             get
@@ -102,27 +111,41 @@ namespace ListDirections.Models
             }
         }
 
+        /// <summary>
+        /// Какой шаг процесса надо сейчас выполнять
+        /// </summary>
         public PreRequisite CurrentStep
         {
             get
             {
-                switch (CurrentStateName)
-                {
-                    case ProcState.HaveToRun:
-                        return StepsToRun.OrderBy(p => p.StepOrder).FirstOrDefault();
-                    case ProcState.Running:
-                        throw new NotImplementedException();
-                    default:
-                        return null;
-                }  
+                if (CurrentStateName != ProcState.Running) return null;
+                
+                // Последняя запись в истории по данному процессу
+                History history = Current_State.Where(h => h.EventID > 0).OrderByDescending(h => h.TimeStart).FirstOrDefault();
+                
+                // Если записей в истории нет, вернуть первый шаг
+                if (history == null) return StepsToRun.OrderBy(p => p.StepOrder).FirstOrDefault();
+
+                // Если последний шаг выполнен успешно, вернуть следующий
+                if (history.TimeFinish.HasValue && history.Success.HasValue && history.Success.Value)
+                    return StepsToRun.Where(p => p.StepOrder > history.PreRequisite.StepOrder).OrderBy(p => p.StepOrder).FirstOrDefault();
+
+                return history.PreRequisite;
             }
         }
 
+        /// <summary>
+        /// Разультаты по текущему шагу
+        /// </summary>
         public History CurrentResult
         {
             get
             {
-                throw new NotImplementedException();
+                return Current_State
+                    .Where(h => h.EventID > 0 && (!h.TimeFinish.HasValue || !h.Success.HasValue || !h.Success.Value))
+                    .OrderByDescending(h => h.TimeStart)
+                    .FirstOrDefault();
+                // Возвращаем только невыполненный шаг, т. к. после удачного выполнения юзер переходит к след. шагу, по которому еще нет результатов.
             }
         }
     }

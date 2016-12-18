@@ -6,18 +6,24 @@ using System.Web;
 namespace ListDirections.Models
 {
     /// <summary>
-    /// This class is not stored in database. And there can be only one visitor - current windows user.
+    /// This class is not stored in database.
     /// </summary>
     public class Visitor
     {
-        public string Login { get; set; }
+        private string _login;
 
-        public AccessRights [] ProcesesID_Read
+        public Visitor() { _login = HttpContext.Current.User.Identity.Name; }
+
+        public Visitor(string login) { _login = login; }
+
+        private Tuple<MainProcess, bool>[] _processes = null;
+        public Tuple<MainProcess, bool>[] User_Processes
         {
             get
             {
-                AccessRights[] result = ContextProcess.Object.Acceses.Where(s => s.UserName == Login && s.ReadOnly == true).ToArray();
-                return result;
+                if (_processes == null) _processes = ContextProcess.Object.Acceses.Where(a => a.UserName == _login)
+                    .Select(a => Tuple.Create<MainProcess, bool>(ContextProcess.Object.MainProceses.Find(a.ProcessID), a.ReadOnly)).ToArray();
+                return _processes;
             }
         }
     }
