@@ -132,6 +132,11 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201612181352388_InitDbMigration.cs" />
+    <Compile Include="Migrations\201612181352388_InitDbMigration.Designer.cs">
+      <DependentUpon>201612181352388_InitDbMigration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccessRights.cs" />
     <Compile Include="Models\ContextProcess.cs" />
     <Compile Include="Models\History.cs" />
@@ -185,6 +190,11 @@
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201612181352388_InitDbMigration.resx">
+      <DependentUpon>201612181352388_InitDbMigration.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

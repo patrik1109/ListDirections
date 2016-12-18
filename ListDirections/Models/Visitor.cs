@@ -5,11 +5,11 @@ using System.Web;
 
 namespace ListDirections.Models
 {
+    /// <summary>
+    /// This class is not stored in database. And there can be only one visitor - current windows user.
+    /// </summary>
     public class Visitor
     {
-        public int ID { get; set; }
-        public string Name { get; set; }
-        public string Surname { get; set; }
         public string Login { get; set; }
 
         public AccessRights [] ProcesesID_Read

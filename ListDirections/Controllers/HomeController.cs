@@ -12,16 +12,8 @@ namespace ListDirections.Controllers
         ContextProcess db = new ContextProcess();
         public ActionResult Index()
         {
-                       
-            IEnumerable<MainProcess> proceses = db.MainProceses;
-            MainProcess proc1 = db.MainProceses.Where(s => s.ID == 1).SingleOrDefault();
-            History history = proc1.Process_History;
-
-            //Shedule[] sheduls = Process_Shedule(1);           
-            Shedule[] shedule = proc1.Process_Shedule;
-
-            ViewBag.Proceses = proceses;
-            return View();
+            ViewBag.Title = "Process List";
+            return View(db.MainProceses.ToArray());
         }
         public Shedule[] Process_Shedule (int ID)
         {

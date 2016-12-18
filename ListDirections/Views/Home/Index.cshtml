@@ -1,9 +1,6 @@
-﻿@model IEnumerable<ListDirections.Models.MainProcess>
-@Model MainProcess
-@{
-    ViewBag.Title = "Home Page";
-    Layout = null;
-}
+﻿@using ListDirections.Models
+@model MainProcess[]
+
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf8" />
     <style type = "text/css">
@@ -29,16 +26,16 @@
         </tr>
 
 
-        @foreach (var b in ViewBag.Proceses)
+        @foreach (MainProcess p in Model)
         {
             <tr>
                 <td>
-                    @b.Name
+                    @p.Name
                 </td>
                 <td>
                     <p>
-                     <input type="button" name="execute_@b.ID" value=" start">
-                     <input type="button" name="edir_@b.ID" value="continue">
+                     <input type="button" name="execute_@p.ID" value=" start">
+                     <input type="button" name="edir_@p.ID" value="continue">
                     </p>
                 </td>
                        
