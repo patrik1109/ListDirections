@@ -47,7 +47,7 @@ namespace ListDirections.Models
                 return _steps;
             }
         }
-
+        
         /// <summary>
         /// Последняя плановая дата запуска процесса 
         /// </summary>
@@ -133,7 +133,9 @@ namespace ListDirections.Models
                 return history.PreRequisite;
             }
         }
-
+       
+        
+         
         /// <summary>
         /// Разультаты по текущему шагу
         /// </summary>

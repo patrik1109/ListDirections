@@ -6,23 +6,27 @@
         }
         TD, TH {
             padding: 3px;
-            border: 1px solid black;
+            border: 2px solid black;
         }
     </style>
 }
+
 
 @using ListDirections.Models
 @model MainProcess[]
 
 <h3> LIST OF PROCESES </h3>
-        
-<table>
-    <tr>
-        <td> <p> Name of  </p></td>
-        <td><p> Work with process</p></td>
-        <td><p> Status of process</p></td>
-    </tr>
 
+<table>
+    <tr style=" background-color:chartreuse">
+        <td> <p> Name of  </p></td>
+        <td><p> Status of process </p></td>
+        <td><p> Work with process </p></td>
+        <td><p> Schedule of process </p> </td>
+        <td><p> Current step </p> </td>
+    </tr>
+   
+    
     @foreach (MainProcess p in Model)
     {
         <tr>
@@ -30,12 +34,45 @@
                 @p.Name
             </td>
             <td>
-                <p>
-                    <input type="button" name="execute_@p.ID" value=" start">
-                    <input type="button" name="edir_@p.ID" value="continue">
-                </p>
+                
+                <p  style=" background-color:chartreuse ">  @p.CurrentStateName </p>
+                @if (@p.CurrentStateName == ProcState.Fail)
+                {
+                    <p style=" background-color:red "> Error Message </p>
+                    <p style=" background-color:red "> @p.Current_State.First().ErrorMessage </p>
+                }
+                                
             </td>
-                       
+            <td>                
+                    @if (@p.CurrentStateName == ProcState.HaveToRun )
+                    {
+                        <p> <input type="button" name="start_@p.ID" value=" start"> </p>
+                    }
+
+                    else if ((@p.CurrentStep == null && p.CurrentStateName == ProcState.Running) ||
+                            (@p.CurrentStep == null && p.CurrentStateName == ProcState.Fail))
+                    {
+                        <p> <input type="button" name="execute_script_@p.ID" value="execute script"> </p> 
+                    }
+                    else
+                    {
+                        <p><input type="button" name="continue_@p.ID" value="continue"></p>
+                    }
+
+            </td>      
+            <td>
+                <p>@p.Name will start to  @p.PlanDate </p> 
+                @if(@p.CurrentStateName != ProcState.HaveToRun)
+                {
+                    <p> Last run time @p.Current_State.First(h => h.EventID == 0).TimeStart </p>
+                }
+            </td>
+            <td>
+                @if (@p.CurrentStep != null)
+                {
+                <p> Current step @p.CurrentStep.StepOrder</p>
+                }
+            </td>     
         </tr>
     }
 </table>
