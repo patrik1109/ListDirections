@@ -46,7 +46,8 @@
             <td>                
                     @if (@p.CurrentStateName == ProcState.HaveToRun )
                     {
-                        <p> <input type="button" name="start_@p.ID" value=" start"> </p>
+                        <p> <input type="button" name="start_@p.ID" value=" start" onclick="Start_Function(@p.ID)"> </p>
+                        <p id="demo"> </p>
                     }
 
                     else if ((@p.CurrentStep == null && p.CurrentStateName == ProcState.Running) ||
@@ -76,4 +77,9 @@
         </tr>
     }
 </table>
-   
+  <script>
+      function Start_Function(id) {
+          document.getElementById("demo").innerHTML = "putin Huilo"+id
+        $.get("/Home/StartProcess/"+id)
+      }
+  </script> 

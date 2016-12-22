@@ -19,5 +19,7 @@ namespace ListDirections.Models
         public int StepOrder { get; set; }
         
         public bool Check() { return true; }
+
+        public string Instruction { get; set; }
     }
 }
