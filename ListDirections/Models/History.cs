@@ -1,12 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ListDirections.Models
 {
     public class History
     {
+        public History()
+        {
+            UserName = System.Web.HttpContext.Current.User.Identity.Name;
+        }
+
         public int ID { get; set; }
 
         [Index]
@@ -26,6 +32,9 @@ namespace ListDirections.Models
         public bool? Success { get; set; }
         
         public string ErrorMessage { get; set; }
+
+        [MaxLength(50)]
+        public string UserName { get; set; }
 
         private PreRequisite _preRequisite = null;
         public PreRequisite PreRequisite

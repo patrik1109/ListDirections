@@ -144,6 +144,10 @@
     <Compile Include="Migrations\201612221135590_MigrateDB.Designer.cs">
       <DependentUpon>201612221135590_MigrateDB.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201612251133583_UserNameMigration.cs" />
+    <Compile Include="Migrations\201612251133583_UserNameMigration.Designer.cs">
+      <DependentUpon>201612251133583_UserNameMigration.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccessRights.cs" />
     <Compile Include="Models\ContextProcess.cs" />
@@ -208,6 +212,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201612221135590_MigrateDB.resx">
       <DependentUpon>201612221135590_MigrateDB.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612251133583_UserNameMigration.resx">
+      <DependentUpon>201612251133583_UserNameMigration.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

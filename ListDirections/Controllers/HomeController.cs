@@ -25,8 +25,9 @@ namespace ListDirections.Controllers
                     SessionID = new_session,ProcessID = id, EventID = 0, TimeStart = DateTime.Now, TimeFinish = null, Success = false };
                 ContextProcess.Object.Historys.Add(history);
                 ContextProcess.Object.SaveChanges();
+                p.Refresh();
             }
-            return View(ContextProcess.Object.MainProceses.ToArray());
+            return View("Index", ContextProcess.Object.MainProceses.ToArray());
         }
     }
 }

@@ -43,7 +43,7 @@ namespace ListDirections.Models
         {
             get
             {
-                if (_steps == null) _steps = ContextProcess.Object.PreRequisites.Where(p => p.ProcessID == ID).ToArray();
+                if (_steps == null) _steps = ContextProcess.Object.PreRequisites.Where(p => p.ProcessID == ID).OrderBy(p => p.StepOrder).ToArray();
                 return _steps;
             }
         }
@@ -68,7 +68,7 @@ namespace ListDirections.Models
                     }
                     if (sch.DayOfWeek.HasValue)
                     {
-                        DateTime dt = DateTime.Today.AddDays(sch.DayOfWeek.Value - (int)DateTime.Today.DayOfWeek).AddHours(sch.Hour).AddMinutes(sch.Minute);
+                        DateTime dt = DateTime.Today.AddDays(sch.DayOfWeek.Value - 1 - (int)DateTime.Today.DayOfWeek).AddHours(sch.Hour).AddMinutes(sch.Minute);
                         if (dt > DateTime.Now) dt = dt.AddDays(-7);
                         dates.Add(dt);
                     }
@@ -133,22 +133,30 @@ namespace ListDirections.Models
                 return history.PreRequisite;
             }
         }
-       
-        
          
         /// <summary>
-        /// Разультаты по текущему шагу
+        /// Возвращает результат последнего действия по процессу
         /// </summary>
         public History CurrentResult
         {
             get
             {
-                return Current_State
-                    .Where(h => h.EventID > 0 && (!h.TimeFinish.HasValue || !h.Success.HasValue || !h.Success.Value))
-                    .OrderByDescending(h => h.TimeStart)
-                    .FirstOrDefault();
-                // Возвращаем только невыполненный шаг, т. к. после удачного выполнения юзер переходит к след. шагу, по которому еще нет результатов.
+                switch (CurrentStateName)
+                {
+                    case ProcState.HaveToRun:
+                        return null;
+                    case ProcState.Running:
+                        return Current_State.OrderByDescending(h => h.TimeStart).FirstOrDefault();
+                    default:
+                        return Current_State.Where(h => h.EventID == 0).FirstOrDefault();
+                }
             }
+        }
+
+        public void Refresh()
+        {
+            _current_state = null;
+            _history = null;
         }
     }
 }

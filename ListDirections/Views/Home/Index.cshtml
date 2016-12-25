@@ -1,31 +1,15 @@
-﻿@section PageStyle 
-{
-    <style>
-        TABLE {
-            border-collapse: collapse;
-        }
-        TD, TH {
-            padding: 3px;
-            border: 2px solid black;
-        }
-    </style>
-}
-
-
-@using ListDirections.Models
+﻿@using ListDirections.Models;
 @model MainProcess[]
 
 <h3> LIST OF PROCESES </h3>
 
 <table>
     <tr style=" background-color:chartreuse">
-        <td> <p> Name of  </p></td>
-        <td><p> Status of process </p></td>
-        <td><p> Work with process </p></td>
-        <td><p> Schedule of process </p> </td>
-        <td><p> Current step </p> </td>
+        <th><p> Name of  </p></th>
+        <th><p> Status of process </p></th>
+        <th><p> Work with process </p></th>
+        <th><p> Schedule of process </p> </th>
     </tr>
-   
     
     @foreach (MainProcess p in Model)
     {
@@ -33,53 +17,125 @@
             <td>
                 @p.Name
             </td>
-            <td>
-                
-                <p  style=" background-color:chartreuse ">  @p.CurrentStateName </p>
-                @if (@p.CurrentStateName == ProcState.Fail)
-                {
-                    <p style=" background-color:red "> Error Message </p>
-                    <p style=" background-color:red "> @p.Current_State.First().ErrorMessage </p>
+            <td> <!-- Status of process -->
+                @{
+                    string color = System.Drawing.Color.White.ToString();
+                    string status_info = string.Empty;
+                    switch (p.CurrentStateName)
+                    {
+                        case ProcState.Fail:
+                            color = System.Drawing.Color.Red.ToString();
+                            status_info = "<br />" + p.CurrentResult.ErrorMessage;
+                            break;
+                        case ProcState.HaveToRun:
+                            color = System.Drawing.Color.Orange.ToString();
+                            status_info = p.PlanDate.ToString(" - dd.MM.yyyy HH:mm");
+                            break;
+                        case ProcState.Running:
+                            color = System.Drawing.Color.Yellow.ToString();
+                            break;
+                        case ProcState.Success:
+                            color = System.Drawing.Color.Green.ToString();
+                            status_info = p.CurrentResult.TimeFinish.Value.ToString(" - dd.MM.yyyy HH:mm");
+                            break;
+                    }
+                    <span style="background-color:@color"> @p.CurrentStateName </span> @status_info
                 }
-                                
             </td>
-            <td>                
-                    @if (@p.CurrentStateName == ProcState.HaveToRun )
-                    {
-                        <p> <input type="button" name="start_@p.ID" value=" start" onclick="Start_Function(@p.ID)"> </p>
-                        <p id="demo"> </p>
-                    }
+            <td> <!-- Work with process -->
+                @if (p.CurrentStateName == ProcState.HaveToRun )
+                {
+                    <input type="button" name="start_process_@p.ID" value="start process" onclick="Start_Function(@p.ID)">
+                }
+                else
+                {
+                    <h4>Steps to execute</h4>
+                    <ol>
+                        @foreach (PreRequisite step in p.StepsToRun)
+                        {
+                            <li>
+                                <p><b>@step.Name</b></p>
+                                <p>@step.Instruction</p>
+                                @{
+                                    History history = p.Current_State.FirstOrDefault(h => h.EventID == step.ID);
+                                    bool is_current = (p.CurrentStep != null && step.ID == p.CurrentStep.ID);
+                                    
+                                    if (history == null)
+                                    {
+                                        if (is_current)
+                                        {
+                                            <input type="button" name="start_step_@step.ID" value="start" />
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (history.TimeFinish.HasValue && history.Success.HasValue && history.Success.Value)
+                                        {
+                                            <p>Finished at @history.TimeFinish.Value.ToString("dd.MM.yyyy HH:mm") by @history.UserName.</p>
+                                        }
+                                        else
+                                        {
+                                            <p>Started at @history.TimeStart.ToString("dd.MM.yyyy HH:mm") by @history.UserName.</p>
+                                            if (is_current)
+                                            {
+                                                <input type="button" name="finish_step_@step.ID" value="finish" />
+                                            }
+                                            if (!string.IsNullOrEmpty(history.ErrorMessage))
+                                            {
+                                                <p><b>Error:</b> @history.ErrorMessage</p>
+                                            }
+                                        }
+                                    }
 
-                    else if ((@p.CurrentStep == null && p.CurrentStateName == ProcState.Running) ||
-                            (@p.CurrentStep == null && p.CurrentStateName == ProcState.Fail))
-                    {
-                        <p> <input type="button" name="execute_script_@p.ID" value="execute script"> </p> 
-                    }
-                    else
-                    {
-                        <p><input type="button" name="continue_@p.ID" value="continue"></p>
-                    }
+                                }
+                            </li>     
+                        }
+                    </ol>
+                }    
 
+                @if ((p.CurrentStep == null && p.CurrentStateName == ProcState.Running) || p.CurrentStateName == ProcState.Fail)
+                {
+                    <p> <input type="button" name="execute_script_@p.ID" value="execute script"> </p> 
+                }
             </td>      
-            <td>
-                <p>@p.Name will start to  @p.PlanDate </p> 
-                @if(@p.CurrentStateName != ProcState.HaveToRun)
-                {
-                    <p> Last run time @p.Current_State.First(h => h.EventID == 0).TimeStart </p>
-                }
-            </td>
-            <td>
-                @if (@p.CurrentStep != null)
-                {
-                <p> Current step @p.CurrentStep.StepOrder</p>
-                }
-            </td>     
+            <td> <!-- Schedule of process -->
+                <ol>
+                    @foreach (Schedule sch in p.Process_Schedule)
+                    {   
+                        if (sch.DayOfWeek.HasValue)
+                        {
+                            <li>Each @(((DayOfWeek)sch.DayOfWeek-1).ToString("g")) at @sch.Hour.ToString("00") : @sch.Minute.ToString("00")</li>           
+                        }
+                        if (sch.DayOfMonth.HasValue)
+                        {
+                            <li>Each @sch.DayOfMonth-th day of month at @sch.Hour.ToString("00") : @sch.Minute.ToString("00")</li>
+                        }
+                    }
+                </ol>
+            </td>   
         </tr>
     }
 </table>
+
+@section PageStyle
+{
+    <style>
+        TABLE {
+            border-collapse: collapse;
+        }
+
+        TD, TH {
+            padding: 3px;
+            border: 2px solid black;
+        }
+    </style>
+}
+
+@section scripts
+{
   <script>
       function Start_Function(id) {
-          document.getElementById("demo").innerHTML = "putin Huilo"+id
-        $.get("/Home/StartProcess/"+id)
+          document.location = "/Home/StartProcess/" + id;
       }
   </script> 
+}
