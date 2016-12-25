@@ -19,23 +19,23 @@
             </td>
             <td> <!-- Status of process -->
                 @{
-                    string color = System.Drawing.Color.White.ToString();
+                    string color = "White";
                     string status_info = string.Empty;
                     switch (p.CurrentStateName)
                 {
                         case ProcState.Fail:
-                            color = System.Drawing.Color.Red.ToString();
+                            color = "Red";
                             status_info = "<br />" + p.CurrentResult.ErrorMessage;
                             break;
                         case ProcState.HaveToRun:
-                            color = System.Drawing.Color.Orange.ToString();
+                            color = "Orange";
                             status_info = p.PlanDate.ToString(" - dd.MM.yyyy HH:mm");
                             break;
                         case ProcState.Running:
-                            color = System.Drawing.Color.Yellow.ToString();
+                            color = "Yellow";
                             break;
                         case ProcState.Success:
-                            color = System.Drawing.Color.Green.ToString();
+                            color = "Green";
                             status_info = p.CurrentResult.TimeFinish.Value.ToString(" - dd.MM.yyyy HH:mm");
                             break;
                 }
@@ -43,10 +43,10 @@
                 }
             </td>
             <td> <!-- Work with process -->
-                @if (p.CurrentStateName == ProcState.HaveToRun )
-                    {
-                    <input type="button" name="start_process_@p.ID" value="start process" onclick="Start_Function(@p.ID)">
-                    }
+                @if (p.CurrentStateName == ProcState.HaveToRun)
+                {
+                    <input type="button" name="start_process_@p.ID" value="start process" onclick="Start_Process(@p.ID)">
+                }
                 else
                 {
                     <h4>Steps to execute</h4>
@@ -64,7 +64,7 @@
                                     {
                                         if (is_current)
                                         {
-                                            <input type="button" name="start_step_@step.ID" value="start" />
+                                            <input type="button" name="start_step_@step.ID" value="start" onclick="Start_Step(@step.ID)" />
                                         }
                                     }
                                     else
@@ -78,7 +78,7 @@
                                             <p>Started at @history.TimeStart.ToString("dd.MM.yyyy HH:mm") by @history.UserName.</p>
                                             if (is_current)
                                             {
-                                                <input type="button" name="finish_step_@step.ID" value="finish" />
+                                                <input type="button" name="finish_step_@step.ID" value="finish" onclick="Try_Finish_Step(@step.ID)" />
                                             }
                                             if (!string.IsNullOrEmpty(history.ErrorMessage))
                                             {
@@ -94,7 +94,7 @@
 
                 @if ((p.CurrentStep == null && p.CurrentStateName == ProcState.Running) || p.CurrentStateName == ProcState.Fail)
                 {
-                    <p> <input type="button" name="execute_script_@p.ID" value="execute script"> </p> 
+                    <p> <input type="button" name="execute_script_@p.ID" value="execute script" onclick="Execute_Script(@p.ID)"> </p> 
                 }
             </td>      
             <td> <!-- Schedule of process -->
@@ -132,9 +132,21 @@
 
 @section scripts
 {
-  <script>
-      function Start_Function(id) {
-          document.location = "/Home/StartProcess/" + id;
-      }
-  </script> 
+    <script>
+        function Start_Process(id) {
+            document.location = "/Home/StartProcess/" + id;
+        }
+
+        function Start_Step(id) {
+            document.location = "/Home/StartStep/" + id;
+        }
+
+        function Try_Finish_Step(id) {
+            document.location = "/Home/FinishStep/" + id;
+        }
+
+        function Execute_Script(id) {
+            document.location = "/Home/ExecuteScript/" + id;
+        }
+    </script> 
 }

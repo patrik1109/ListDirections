@@ -23,7 +23,11 @@ namespace ListDirections.Models
 
         public int StepOrder { get; set; }
         
-        public bool Check() { return true; }
+        public bool Check(out string err_message) 
+        {
+            err_message = string.Empty;
+            return true; 
+        }
 
         public string Instruction { get; set; }
 

@@ -10,6 +10,9 @@ namespace ListDirections.Models
     {
         public History()
         {
+            TimeStart = DateTime.Now;
+            TimeFinish = null;
+            Success = false;
             UserName = System.Web.HttpContext.Current.User.Identity.Name;
         }
 
