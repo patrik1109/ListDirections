@@ -10,7 +10,7 @@
         <th><p> Work with process </p></th>
         <th><p> Schedule of process </p> </th>
     </tr>
-    
+   
     @foreach (MainProcess p in Model)
     {
         <tr>
@@ -22,7 +22,7 @@
                     string color = System.Drawing.Color.White.ToString();
                     string status_info = string.Empty;
                     switch (p.CurrentStateName)
-                    {
+                {
                         case ProcState.Fail:
                             color = System.Drawing.Color.Red.ToString();
                             status_info = "<br />" + p.CurrentResult.ErrorMessage;
@@ -38,15 +38,15 @@
                             color = System.Drawing.Color.Green.ToString();
                             status_info = p.CurrentResult.TimeFinish.Value.ToString(" - dd.MM.yyyy HH:mm");
                             break;
-                    }
+                }
                     <span style="background-color:@color"> @p.CurrentStateName </span> @status_info
                 }
             </td>
             <td> <!-- Work with process -->
                 @if (p.CurrentStateName == ProcState.HaveToRun )
-                {
+                    {
                     <input type="button" name="start_process_@p.ID" value="start process" onclick="Start_Function(@p.ID)">
-                }
+                    }
                 else
                 {
                     <h4>Steps to execute</h4>
@@ -59,7 +59,7 @@
                                 @{
                                     History history = p.Current_State.FirstOrDefault(h => h.EventID == step.ID);
                                     bool is_current = (p.CurrentStep != null && step.ID == p.CurrentStep.ID);
-                                    
+
                                     if (history == null)
                                     {
                                         if (is_current)
@@ -86,12 +86,11 @@
                                             }
                                         }
                                     }
-
                                 }
                             </li>     
                         }
                     </ol>
-                }    
+                    }
 
                 @if ((p.CurrentStep == null && p.CurrentStateName == ProcState.Running) || p.CurrentStateName == ProcState.Fail)
                 {
@@ -103,16 +102,16 @@
                     @foreach (Schedule sch in p.Process_Schedule)
                     {   
                         if (sch.DayOfWeek.HasValue)
-                        {
+                {
                             <li>Each @(((DayOfWeek)sch.DayOfWeek-1).ToString("g")) at @sch.Hour.ToString("00") : @sch.Minute.ToString("00")</li>           
-                        }
+                }
                         if (sch.DayOfMonth.HasValue)
-                        {
+                {
                             <li>Each @sch.DayOfMonth-th day of month at @sch.Hour.ToString("00") : @sch.Minute.ToString("00")</li>
                         }
-                    }
+                }
                 </ol>
-            </td>   
+            </td>     
         </tr>
     }
 </table>

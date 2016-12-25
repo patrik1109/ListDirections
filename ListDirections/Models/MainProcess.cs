@@ -133,7 +133,7 @@ namespace ListDirections.Models
                 return history.PreRequisite;
             }
         }
-         
+       
         /// <summary>
         /// Возвращает результат последнего действия по процессу
         /// </summary>
@@ -151,7 +151,7 @@ namespace ListDirections.Models
                         return Current_State.Where(h => h.EventID == 0).FirstOrDefault();
                 }
             }
-        }
+            }
 
         public void Refresh()
         {

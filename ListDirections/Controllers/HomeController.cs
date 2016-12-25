@@ -11,7 +11,6 @@ namespace ListDirections.Controllers
     {
         public ActionResult Index()
         {
-            ViewBag.Title = "Process List";
             return View(ContextProcess.Object.MainProceses.ToArray());
         }       
 
