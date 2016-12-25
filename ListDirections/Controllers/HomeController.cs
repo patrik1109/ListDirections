@@ -11,6 +11,8 @@ namespace ListDirections.Controllers
     {
         public ActionResult Index()
         {
+            bool permission =  MainProcess.PermissionUserRead(@"C:\\22");
+            ViewBag.Permission = permission.ToString();
             ViewBag.Title = "Process List";
             return View(ContextProcess.Object.MainProceses.ToArray());
         }       

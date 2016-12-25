@@ -2,20 +2,25 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.ComponentModel.DataAnnotations;
+using System.Security.Permissions;
+using System.Security;
+using System.IO;
+using System.Security.AccessControl;
+using System.Security.Principal;
 
 namespace ListDirections.Models
 {
     public enum ProcState { HaveToRun, Running, Success, Fail, Unknown }
 
-    public class MainProcess 
+    public class MainProcess
     {
         public int ID { get; set; }
 
         [MaxLength(50)]
         public string Name { get; set; }
-        
+
         public string WorkingDir { get; set; }
-        
+
         public string FinalScript { get; set; }
 
         private Schedule[] _schedules = null;
@@ -24,7 +29,7 @@ namespace ListDirections.Models
             get
             {
                 if (_schedules == null) _schedules = ContextProcess.Object.Schedules.Where(s => s.ProcessID == ID).ToArray();
-                return _schedules; 
+                return _schedules;
             }
         }
 
@@ -47,7 +52,7 @@ namespace ListDirections.Models
                 return _steps;
             }
         }
-        
+
         /// <summary>
         /// Последняя плановая дата запуска процесса 
         /// </summary>
@@ -89,7 +94,7 @@ namespace ListDirections.Models
                 return _current_state;
             }
         }
-        
+
         /// <summary>
         /// Текущее состояние (название)
         /// </summary>
@@ -119,10 +124,10 @@ namespace ListDirections.Models
             get
             {
                 if (CurrentStateName != ProcState.Running) return null;
-                
+
                 // Последняя запись в истории по данному процессу
                 History history = Current_State.Where(h => h.EventID > 0).OrderByDescending(h => h.TimeStart).FirstOrDefault();
-                
+
                 // Если записей в истории нет, вернуть первый шаг
                 if (history == null) return StepsToRun.OrderBy(p => p.StepOrder).FirstOrDefault();
 
@@ -133,9 +138,9 @@ namespace ListDirections.Models
                 return history.PreRequisite;
             }
         }
-       
-        
-         
+
+
+
         /// <summary>
         /// Разультаты по текущему шагу
         /// </summary>
@@ -150,5 +155,55 @@ namespace ListDirections.Models
                 // Возвращаем только невыполненный шаг, т. к. после удачного выполнения юзер переходит к след. шагу, по которому еще нет результатов.
             }
         }
+
+        //determines name of user
+        public static string GetUserName()
+        {
+            string name = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
+            return name.Substring(name.IndexOf('\\') + 1);
+        }
+        
+        public static bool PermissionUserWrite(string path)
+        {
+            bool result = false;
+            try {
+                WindowsIdentity user = WindowsIdentity.GetCurrent();
+                DirectorySecurity sec = Directory.GetAccessControl(path, AccessControlSections.Access);
+                AuthorizationRuleCollection dacls = sec.GetAccessRules(true, true, typeof(SecurityIdentifier));
+
+                foreach (FileSystemAccessRule dacl in dacls)
+                {
+                    if ((dacl.FileSystemRights & FileSystemRights.Write) == FileSystemRights.Write)
+                        result = true;
+                }
+            }
+            catch(Exception e)
+            {
+                result = false;
+            }
+            return result;
+        }
+        public static bool PermissionUserRead(string path)
+        {
+            bool result = false;
+            try
+            {
+                WindowsIdentity user = WindowsIdentity.GetCurrent();
+                DirectorySecurity sec = Directory.GetAccessControl(path, AccessControlSections.Access);
+                AuthorizationRuleCollection dacls = sec.GetAccessRules(true, true, typeof(SecurityIdentifier));
+
+                foreach (FileSystemAccessRule dacl in dacls)
+                {
+                    if ((dacl.FileSystemRights & FileSystemRights.Read) == FileSystemRights.Read)
+                        result = true;
+                }
+            }
+            catch (Exception e)
+            {
+                result = false;
+            }
+            return result;
+        }
+
     }
 }
