@@ -79,7 +79,7 @@ namespace ListDirections.Controllers
                 History history = p.Current_State.FirstOrDefault(h => h.EventID == 0);
                 if (history != null)
                 {
-                    if (string.IsNullOrEmpty(p.FinalScript))
+                    /*if (string.IsNullOrEmpty(p.FinalScript))
                     {
                         history.Success = false;
                         history.ErrorMessage = "Final script is empty.";
@@ -104,7 +104,11 @@ namespace ListDirections.Controllers
                             history.Success = false;
                             history.ErrorMessage = ex.GetBaseException().Message;
                         }
-                    }
+                    }*/
+
+                    // К выполнению скрипта вернемся позже, пока просто закончим процесс с успехом.
+                    history.Success = true;
+
                     history.TimeFinish = DateTime.Now;
                     ContextProcess.Object.SaveChanges();
                     p.Refresh();
