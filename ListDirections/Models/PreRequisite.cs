@@ -26,9 +26,32 @@ namespace ListDirections.Models
         public bool Check(out string err_message) 
         {
             err_message = string.Empty;
-            return true; 
-        }
+            bool result = true;
+            string[] arg = Arguments.Split(';');
 
+            if (Name.Equals("Copy file") && StepOrder != 3)
+            {
+                result = PermissionUserRead(arg[0]);
+                if (!result)
+                {
+                    err_message = "Access dinited to path " + arg[0];
+                }
+            }
+            else
+            {
+                try
+                {
+                    System.IO.File.Copy(arg[0], arg[1], true);
+                }
+                catch (Exception ex)
+                {
+                    err_message = ex.Message;
+                    result = false;
+                }
+            }
+            return result; 
+        }
+        public string Arguments { get; set; }
         public string Instruction { get; set; }
 
         public static bool PermissionUserWrite(string path)

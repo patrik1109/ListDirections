@@ -54,23 +54,27 @@
                         @foreach (PreRequisite step in p.StepsToRun)
                         {
                             <li>
-                                <p><b>@step.Name</b></p>
-                                <p>@step.Instruction</p>
-                                @{
-                                    History history = p.Current_State.FirstOrDefault(h => h.EventID == step.ID);
-                                    bool is_current = (p.CurrentStep != null && step.ID == p.CurrentStep.ID);
+                                <p><b>@step.Name </b></p>
+                                <p>@step.Instruction ></p>
+                                  @{
+                                      History history = p.Current_State.FirstOrDefault(h => h.EventID == step.ID);
+                                      bool is_current = (p.CurrentStep != null && step.ID == p.CurrentStep.ID);
 
-                                    if (history == null)
-                                    {
-                                        if (is_current)
-                                        {
+                                      if (history == null)
+                                      {
+                                         if (is_current)
+                                          {
                                             <input type="button" name="start_step_@step.ID" value="start" onclick="Start_Step(@step.ID)" />
-                                        }
-                                    }
-                                    else
-                                    {
-                                        if (history.TimeFinish.HasValue && history.Success.HasValue && history.Success.Value)
-                                        {
+                                              if (p.CurrentStep.StepOrder != 3)
+                                              {
+                                                <a href=" file:////c://22"> reference</a>
+                                              }
+                                          }
+                                      }
+                                      else
+                                      {
+                                          if (history.TimeFinish.HasValue && history.Success.HasValue && history.Success.Value)
+                                          {
                                             <p>Finished at @history.TimeFinish.Value.ToString("dd.MM.yyyy HH:mm") by @history.UserName.</p>
                                         }
                                         else
@@ -94,7 +98,7 @@
 
                 @if ((p.CurrentStep == null && p.CurrentStateName == ProcState.Running) || p.CurrentStateName == ProcState.Fail)
                 {
-                    <p> <input type="button" name="execute_script_@p.ID" value="execute script" onclick="Execute_Script(@p.ID)"> </p> 
+                    <p> <input type="button" name="execute_script_@p.ID" value="finish process" onclick="Execute_Script(@p.ID)"> </p> 
                 }
             </td>      
             <td> <!-- Schedule of process -->
