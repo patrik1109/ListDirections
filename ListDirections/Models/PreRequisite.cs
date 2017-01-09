@@ -23,16 +23,19 @@ namespace ListDirections.Models
 
         public int StepOrder { get; set; }
         
-        public bool Check(out string err_message) 
+        public bool Check(out string err_message, out string path_to_file) 
         {
             err_message = string.Empty;
+            path_to_file = string.Empty;
             bool result = true;
             string[] arg = Arguments.Split(';');
 
             if (Name.Equals("Copy file") && StepOrder != 3)
             {
+                path_to_file = arg[1];
+               
                 result = PermissionUserRead(arg[0]);
-                if (!result)
+              if (!result)
                 {
                     err_message = "Access dinited to path " + arg[0];
                 }
@@ -41,7 +44,7 @@ namespace ListDirections.Models
             {
                 try
                 {
-                    System.IO.File.Copy(arg[0], arg[1], true);
+                    System.IO.File.Copy(arg[0], arg[1], true);                   
                 }
                 catch (Exception ex)
                 {

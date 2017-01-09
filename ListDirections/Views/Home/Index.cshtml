@@ -65,9 +65,15 @@
                                          if (is_current)
                                           {
                                             <input type="button" name="start_step_@step.ID" value="start" onclick="Start_Step(@step.ID)" />
-                                              if (p.CurrentStep.StepOrder != 3)
+                                              if (p.CurrentStep.StepOrder == 1)
                                               {
-                                                <a href=" file:////c://22"> reference</a>
+                                                <a href="\\Comp_yegor_lp\22\"> reference to path </a>
+                                               
+                                              }
+                                              else if (p.CurrentStep.StepOrder == 2)
+                                              {
+                                                  <a href = "\\Comp_yegor_lp\111\"> reference to path </a>
+                                               
                                               }
                                           }
                                       }

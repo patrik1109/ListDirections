@@ -36,7 +36,7 @@ namespace ListDirections.Controllers
             MainProcess p = ContextProcess.Object.MainProceses.Find(step.ProcessID);
             if (p.CurrentStateName == ProcState.Running && p.CurrentStep.ID == id)
             {
-                History history = new History { SessionID = p.CurrentResult.SessionID, ProcessID = p.ID, EventID = id };
+                History history = new History { SessionID = p.CurrentResult.SessionID, ProcessID = p.ID, EventID = id };                               
                 ContextProcess.Object.Historys.Add(history);
                 ContextProcess.Object.SaveChanges();
                 p.Refresh();
@@ -53,12 +53,16 @@ namespace ListDirections.Controllers
                 History history = p.Current_State.FirstOrDefault(h => h.EventID == id);
                 if (history != null)
                 {
+                    string path_to_file;
                     string err;
-                    history.Success = step.Check(out err);
+                    
+                    history.Success = step.Check(out err,out path_to_file);
+                  
                     if (history.Success.Value)
                     {
                         history.TimeFinish = DateTime.Now;
                         history.ErrorMessage = string.Empty;
+                        
                     }
                     else
                     {
